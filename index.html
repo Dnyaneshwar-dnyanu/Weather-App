@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Weather Now</title>
+     <link rel="stylesheet" href="styles.css">
+     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+<body>
+     <div class="loader" id="loader" >
+          <img src="/assets/images/icon-loading.svg" alt="loading...">
+     </div>
+     <div id="weather" class="weather" style=" overflow: none;">
+          <nav>
+               <div class="logo">
+                    <img src="./images/weather_logo.svg" alt="Weather">
+               </div>
+               <div class="drop_down">
+                    <div class="drop_down_title">
+                         <span><img src="/assets/images/icon-units.svg" alt=""></span>
+                         Units
+                         <span><img src="/assets/images/icon-dropdown.svg" alt=""></span>
+                    </div>
+                    <div class="drop_down_content">
+                         <h4 class="title">Switch to Imperial</h4>
+                         <div class="tempUnit unitsBox">
+                              <span>Temperature</span>
+                              <ul>
+                                   <li class="active" id="celsius">Celsius (&deg;C) <span
+                                             class="check"><img src="/assets/images/icon-checkmark.svg" alt="check-mark"></span></li>
+                                   <li id="fahrenheit">Fahrenheit (&deg;F) <span
+                                             class="check"><img src="/assets/images/icon-checkmark.svg" alt="check-mark"></span></li>
+                              </ul>
+                         </div>
+                         <hr>
+                         <div class="windUnit unitsBox">
+                              <span>Wind Speed</span>
+                              <ul>
+                                   <li class="active" id="kmh">km/h <span
+                                             class="check"><img src="/assets/images/icon-checkmark.svg" alt="check-mark"></span></li>
+                                   <li id="mph">mph <span class="check"><img src="/assets/images/icon-checkmark.svg" alt="check-mark"></span></li>
+                              </ul>
+                         </div>
+                         <hr>
+                         <div class="precpt unitsBox">
+                              <span>Precipitation</span>
+                              <ul>
+                                   <li class="active" id="mm">Millimeters (mm) <span
+                                             class="check"><img src="/assets/images/icon-checkmark.svg" alt="check-mark"></span></li>
+                                   <li id="inch">Inches (inch) <span
+                                             class="check"><img src="/assets/images/icon-checkmark.svg" alt="check-mark"></span></li>
+                              </ul>
+                         </div>
+                    </div>
+               </div>
+          </nav>
+          <main>
+               <h1 class="agbalumo-regular h-title">How's the sky looking today?</h1>
+               <form class="searchForm" action="/search" method="get" autocomplete="off">
+                    <div class="search">
+                         <div>
+                              <span><img src="/assets/images/icon-search.svg" alt=""></span>
+                              <input type="search" name="searchWeather" id="searchInput"
+                                   placeholder="Search for a place...">
+                         </div>
+                         <button type="submit" class="btn">Search</button>
+                    </div>
+                    <div class="status">No search result Found!</div>
+               </form>
+               <div class="weather-container">
+                    <div class="weather-content">
+                         <div class="todays-weather-content">
+                              <div class="location-date-details">
+                                   <h3 class="location-name" id="location">Bengaluru, India</h3>
+                                   <p class="todays-date" id="dateNow">Monday, Sep 15, 2025</p>
+                              </div>
+                              <div class="todays-weather-now">
+                                   <img src="" alt="">
+                                   <span class="weather-value" id="temperatureNow">
+                                   </span>
+                              </div>
+                         </div>
+                         <div class="todays-weather-desc">
+                              <div class="desc-box">
+                                   <h4>Feels like</h4>
+                                   <span id="feelsLike">18&deg;</span>
+                              </div>
+                              <div class="desc-box">
+                                   <h4>Humidity</h4>
+                                   <span id="humidity">46%</span>
+                              </div>
+                              <div class="desc-box">
+                                   <h4>Wind</h4>
+                                   <span id="windSpeed">14 km/h</span>
+                              </div>
+                              <div class="desc-box">
+                                   <h4>Precipitation</h4>
+                                   <span id="precipitation">0 mm</span>
+                              </div>
+                         </div>
+                         <div class="daily-forecast">
+                              <div class="title">
+                                   Daily forecast
+                              </div>
+                              <div class="daily-forecast-container">
+
+                              </div>
+                         </div>
+                    </div>
+                    <div class="hourly-forecast-content">
+                         <div class="title">
+                              <span>Hourly forecast</span>
+                              <div class="drop_down_days">
+                                   <span class="daySelected">Monday</span>
+                                   <ul id="hourly-forecast-ul-days" class="drop_down_ul">
+                                        <li data-day="monday">Monday</li>
+                                        <li data-day="tuesday">Tuesday</li>
+                                        <li data-day="wednesday">Wednesday</li>
+                                        <li data-day="thursday">Thursday</li>
+                                        <li data-day="friday">Friday</li>
+                                        <li data-day="saturday">Saturday</li>
+                                        <li data-day="sunday">Sunday</li>
+                                   </ul>
+                              </div>
+                         </div>
+                         <ul class="hourly-forecast-values">
+
+                         </ul>
+                    </div>
+               </div>
+          </main>
+          <div class="error" style="display: none;">
+               <img src="/assets/images/icon-error.svg" alt="error">
+               <h1>Something went wrong</h1>
+               <p>We couldn't connect to the server(API error). Please try again in a few moments.</p>
+               <button class="retryBtn"><img src="/assets/images/icon-retry.svg" alt="Retry">Retry</button>
+          </div>
+     </div>
+
+     <script src="script.js"></script>
+</body>
+
+</html>
