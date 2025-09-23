@@ -12,6 +12,13 @@ async function getLongLat(placeName) {
      return { longitude, latitude, country };
 }
 
+
+let labels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+let dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+let hourlyData = {
+     Sun: {}, Mon: {}, Tue: {}, Wed: {}, Thu: {}, Fri: {}, Sat: {}
+};
+
 async function getWeather(placeName, tempUnit, windUnit, precipitationUnit) {
      try {
 
@@ -32,7 +39,7 @@ async function getWeather(placeName, tempUnit, windUnit, precipitationUnit) {
                                    latitude: position.coords.latitude
                               });
                          },
-                         (error) => reject(error.message())
+                         (error) => reject(error.message)
                     );
                });
 
@@ -62,6 +69,17 @@ async function getWeather(placeName, tempUnit, windUnit, precipitationUnit) {
 
           let units = data.daily_units.temperature_2m_max;
           let daily = data.daily;
+
+          let i = 0;
+          while (i < data.hourly.time.length) {
+               let day = (new Date(data.hourly.time[i])).getDay();
+               let label = labels[day];
+               hourlyData[label].time = data.hourly.time.slice(i, i + 24);
+               hourlyData[label].temperature_2m = data.hourly.temperature_2m.slice(i, i + 24);
+               hourlyData[label].weather_code = data.hourly.weather_code.slice(i, i + 24);
+               i = i + 24;
+          }
+
           let hourly = data.hourly;
           let current = data.current;
 
@@ -70,7 +88,7 @@ async function getWeather(placeName, tempUnit, windUnit, precipitationUnit) {
 
           document.querySelector('.status').style.display = "none";
           document.querySelector('.weather-container').style.display = "flex";
-          return { locationName, dateNow, tempNow, windSpeed, humidity, feelsLike, precipitation, hourly, daily, current, units };
+          return { locationName, dateNow, tempNow, windSpeed, humidity, feelsLike, precipitation, hourly, hourlyData, daily, current, units };
      }
      catch {
           document.querySelector('.status').style.display = "inline-block";
@@ -108,7 +126,39 @@ function getWeatherIcon(code, isDay) {
 }
 
 
-async function setWeather(placeName, tempUnit, windUnit, precipitationUnit) {
+function addHourlyDataToList (label) {
+     let hours = new Date().getHours();
+     let ampm = hours >= 12 ? "PM" : "AM";
+     let i = ampm == "AM" ? 0 : 12;
+
+     document.querySelectorAll('.hourly-forecast-values > li').forEach(li => {
+          let hour = parseInt(hourlyData[label].time[i].slice(11, 13), 10);
+          let temp = parseInt(hourlyData[label].temperature_2m[i], 10);
+          let weather_code_value = hourlyData[label].weather_code[i];
+          time = hour % 12;
+          if (time == 0) { time = 12 }
+
+          li.innerHTML = `
+                    <span class="hourly-forecast-icons"><img src="/images/${getWeatherIcon(weather_code_value)}" alt="">${time} ${ampm}</span><span>${temp}&deg;</span>`;
+
+          i++;
+     });
+
+     document.querySelectorAll('.daily-forecast-container .forecast-desc-box').forEach(div => {
+          if (div.hasAttribute('class', 'activeDay')) {
+               div.classList.remove('activeDay');
+               return;
+          }
+     });
+
+     let div = document.querySelector(`.daily-forecast-container #${label}`);
+     div.classList.add('activeDay');
+
+     console.log(div);
+
+}
+
+async function setWeather(placeName, tempUnit, windUnit, precipitationUnit, day) {
      let temperatureNow = document.getElementById('temperatureNow');
      let location = document.getElementById('location');
      let dateNow = document.getElementById('dateNow');
@@ -120,6 +170,7 @@ async function setWeather(placeName, tempUnit, windUnit, precipitationUnit) {
      let hourlyForecast = document.querySelector('.hourly-forecast-content > .hourly-forecast-values');
      let currentIcon = document.querySelector('.todays-weather-now img');
      let todaysWeatherIcon = document.querySelector('.todays-weather-now img');
+     let dayName = document.querySelector('.drop_down_days .daySelected');
 
      let weatherData = await getWeather(placeName, tempUnit, windUnit, precipitationUnit);
      dateNow.textContent = weatherData.dateNow;
@@ -133,12 +184,12 @@ async function setWeather(placeName, tempUnit, windUnit, precipitationUnit) {
      todaysWeatherIcon.src = '/images/' + getWeatherIcon(weatherData.current.weather_code, weatherData.current.is_day);
 
      let daysHTML = "", hourlyHTML = "";
-     let dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+     
      weatherData.daily.time.forEach((day, index) => {
           let today = dayNames[(new Date(day)).getDay()];
 
-          daysHTML += `<div class="forecast-desc-box">
-                                   <h4 class="day">${today}</h4>
+          daysHTML += `<div id="${today.substring(0, 3)}" class="forecast-desc-box ${index == 0 ? "activeDay" : ""}">
+                                   <h4 class="day">${today.substring(0, 3)}</h4>
                                    <img src="/images/${getWeatherIcon(weatherData.daily.weather_code[index], weatherData.current.is_day)}" alt="">
                                    <div class="forecast-values">
                                         <span class="highTemp">${parseInt(weatherData.daily.temperature_2m_max[index])}&deg;</span>
@@ -157,12 +208,18 @@ async function setWeather(placeName, tempUnit, windUnit, precipitationUnit) {
           startHour = 12;
      }
 
-     for (let i = startHour; i < startHour + 12; i++) {
-          let time = parseInt(weatherData.hourly.time[i].slice(11, 13), 10);
-          time = time > 12 ? time - 12 : time;
-          if (time == 0) { time = 12; }
+     // let label = labels[];
+     dayName.textContent = dayNames[day];
+     let label = labels[day];
 
-          let temp = parseInt(weatherData.hourly.temperature_2m[i], 10);
+     for (let i = startHour; i < startHour + 12; i++) {
+          let hour = parseInt(weatherData.hourlyData[label].time[i].slice(11, 13), 10);
+          let time = hour % 12;
+          if (time == 0) { 
+               time = 12;
+          }
+          
+          let temp = parseInt(weatherData.hourlyData[label].temperature_2m[i], 10);
           hourlyHTML += `<li><span class="hourly-forecast-icons"><img src="/images/${getWeatherIcon(weatherData.hourly.weather_code[i], weatherData.current.is_day)}" alt="">${time} ${ampm}</span><span>${temp}&deg;</span></li>`
      }
 
@@ -173,14 +230,15 @@ async function setWeather(placeName, tempUnit, windUnit, precipitationUnit) {
 }
 
 async function main() {
-     setWeather("", 'celsius', 'kmh', 'mm');
+     let day = new Date().getDay();
+     setWeather("", 'celsius', 'kmh', 'mm', day);
 
      let form = document.querySelector('.searchForm');
      let searchInput = document.getElementById('searchInput');
 
      form.addEventListener('submit', async (event) => {
           event.preventDefault();
-          await setWeather(searchInput.value, 'celsius', 'kmh', 'mm');
+          await setWeather(searchInput.value, 'celsius', 'kmh', 'mm', day);
      });
 
      let getLocationName = () => {
@@ -196,37 +254,37 @@ async function main() {
 
      celsiusLi.addEventListener('click', (e) => {
           let placeName = getLocationName();
-          setWeather(placeName, 'celsius', 'kmh', 'mm');
+          setWeather(placeName, 'celsius', 'kmh', 'mm', day);
           celsiusLi.classList.toggle('active');
           fahrenheitLi.classList.toggle('active');
      })
      fahrenheitLi.addEventListener('click', (e) => {
           let placeName = getLocationName();
-          setWeather(placeName, 'fahrenheit', 'kmh', 'mm');
+          setWeather(placeName, 'fahrenheit', 'kmh', 'mm', day);
           fahrenheitLi.classList.toggle('active');
           celsiusLi.classList.toggle('active');
      })
      kmhLi.addEventListener('click', (e) => {
           let placeName = getLocationName();
-          setWeather(placeName, 'celsius', 'kmh', 'mm');
+          setWeather(placeName, 'celsius', 'kmh', 'mm', day);
           kmhLi.classList.toggle('active');
           mphLi.classList.toggle('active');
      })
      mphLi.addEventListener('click', (e) => {
           let placeName = getLocationName();
-          setWeather(placeName, 'celsius', 'mph', 'mm');
+          setWeather(placeName, 'celsius', 'mph', 'mm', day);
           mphLi.classList.toggle('active');
           kmhLi.classList.toggle('active');
      })
      mmLi.addEventListener('click', (e) => {
           let placeName = getLocationName();
-          setWeather(placeName, 'celsius', 'kmh', 'mm');
+          setWeather(placeName, 'celsius', 'kmh', 'mm', day);
           mmLi.classList.toggle('active');
           inchLi.classList.toggle('active');
      })
      inchLi.addEventListener('click', (e) => {
           let placeName = getLocationName();
-          setWeather(placeName, 'celsius', 'kmh', 'inch');
+          setWeather(placeName, 'celsius', 'kmh', 'inch', day);
           inchLi.classList.toggle('active');
           mmLi.classList.toggle('active');
      })
@@ -235,8 +293,15 @@ async function main() {
           location.reload();
      });
 
-     document.getElementById('hourly-forecast-ul-days').addEventListener('click', () => {
-          
+     document.querySelectorAll('#hourly-forecast-ul-days > li').forEach(e => {
+          e.addEventListener('click', (dayClicked) => {
+               let day = dayClicked.target.dataset.day;
+               let index = dayNames.findIndex( d => d.toLowerCase() === day)
+               let label = labels[index];
+               document.querySelector('.daySelected').textContent = day;
+
+               addHourlyDataToList(label);
+          })
      })
 
 }

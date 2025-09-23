@@ -386,7 +386,7 @@ main {
      border: var(--border);
 }
 
-.daily-forecast-container> :first-child {
+.daily-forecast-container .activeDay {
      background: linear-gradient(to bottom, #23237a, #25253F);
 }
 
@@ -431,6 +431,7 @@ main {
 }
 
 .hourly-forecast-content .title .daySelected {
+     text-transform: capitalize;
      padding: 0.4rem 0.7rem;
      background-color: #1e1e31;
      border-radius: 6px;
@@ -604,11 +605,6 @@ input[type="search"]::-webkit-search-cancel-button {
      .todays-weather-desc {
           gap: 0.4rem;
      }
-
-
-     .daily-forecast .daily-forecast-container {
-          gap: 0.7rem;
-     }
 }
 
 @media (width <=750px) {
@@ -631,6 +627,10 @@ input[type="search"]::-webkit-search-cancel-button {
 
      .todays-weather-desc {
           flex-wrap: wrap;
+     }
+
+     .daily-forecast .daily-forecast-container {
+          grid-template-columns: repeat(5, minmax(0, 1fr));
      }
 
      .daily-forecast-container .forecast-desc-box img {
@@ -666,7 +666,8 @@ input[type="search"]::-webkit-search-cancel-button {
      }
      .weather {
           padding: 0 1rem;
-          width: 100%;
+          width: 80%;
+          margin: 0 auto;
      }
 
      .search {
@@ -705,7 +706,11 @@ input[type="search"]::-webkit-search-cancel-button {
      }
 }
 
-@media (width <= 280px) {
+@media (width <= 380px) {
+     .weather {
+          width: 100%;
+          margin: 0;
+     }
      nav .drop_down_title {
           padding: 0.3rem;
           font-size: 12px;
@@ -724,7 +729,7 @@ input[type="search"]::-webkit-search-cancel-button {
           padding: 0 0.3rem;
      }
      .weather-value {
-          font-size: 2rem;
+          font-size: 3rem;
      }
 
      .todays-weather-now {
