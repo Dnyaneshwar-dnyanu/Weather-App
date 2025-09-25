@@ -1,6 +1,6 @@
 async function getLongLat(placeName) {
-     const urlToLongLat = `https://geocoding-api.open-meteo.com/v1/search?name=${placeName}&count=1&language=en&format=json`;
 
+     const urlToLongLat = `https://geocoding-api.open-meteo.com/v1/search?name=${placeName}&count=1&language=en&format=json`;
 
      let res = await fetch(urlToLongLat);
      let data = await res.json();
@@ -90,7 +90,8 @@ async function getWeather(placeName, tempUnit, windUnit, precipitationUnit) {
           document.querySelector('.weather-container').style.display = "flex";
           return { locationName, dateNow, tempNow, windSpeed, humidity, feelsLike, precipitation, hourly, hourlyData, daily, current, units };
      }
-     catch {
+     catch (error) {
+          console.error("Error fetching weather:", error);
           document.querySelector('.status').style.display = "inline-block";
           document.querySelector('.weather-container').style.display = "none";
           document.getElementById('weather').style.display = "block";
@@ -126,7 +127,7 @@ function getWeatherIcon(code, isDay) {
 }
 
 
-function addHourlyDataToList (label) {
+function addHourlyDataToList(label) {
      let hours = new Date().getHours();
      let ampm = hours >= 12 ? "PM" : "AM";
      let i = ampm == "AM" ? 0 : 12;
@@ -184,7 +185,7 @@ async function setWeather(placeName, tempUnit, windUnit, precipitationUnit, day)
      todaysWeatherIcon.src = '/images/' + getWeatherIcon(weatherData.current.weather_code, weatherData.current.is_day);
 
      let daysHTML = "", hourlyHTML = "";
-     
+
      weatherData.daily.time.forEach((day, index) => {
           let today = dayNames[(new Date(day)).getDay()];
 
@@ -196,6 +197,7 @@ async function setWeather(placeName, tempUnit, windUnit, precipitationUnit, day)
                                         <span class="lowTemp">${parseInt(weatherData.daily.temperature_2m_min[index])}&deg;</span>
                                    </div>
                               </div>`;
+
      });
 
      days.innerHTML = daysHTML;
@@ -215,10 +217,10 @@ async function setWeather(placeName, tempUnit, windUnit, precipitationUnit, day)
      for (let i = startHour; i < startHour + 12; i++) {
           let hour = parseInt(weatherData.hourlyData[label].time[i].slice(11, 13), 10);
           let time = hour % 12;
-          if (time == 0) { 
+          if (time == 0) {
                time = 12;
           }
-          
+
           let temp = parseInt(weatherData.hourlyData[label].temperature_2m[i], 10);
           hourlyHTML += `<li><span class="hourly-forecast-icons"><img src="/images/${getWeatherIcon(weatherData.hourly.weather_code[i], weatherData.current.is_day)}" alt="">${time} ${ampm}</span><span>${temp}&deg;</span></li>`
      }
@@ -235,6 +237,47 @@ async function main() {
 
      let form = document.querySelector('.searchForm');
      let searchInput = document.getElementById('searchInput');
+     let suggestionUl = document.getElementById('searchSuggestion');
+     let timeout = null;
+
+     searchInput.addEventListener('input', async (e) => {
+
+          clearTimeout(timeout);
+
+          timeout = setTimeout(async () => {
+               const query = searchInput.value;
+
+               if (query.length < 2) {
+                    suggestionUl.innerHTML = "";
+                    return;
+               }
+
+               const url = `https://geocoding-api.open-meteo.com/v1/search?name=${query}&count=5&language=en&format=json`;
+               const res = await fetch(url);
+               const data = await res.json();
+
+               suggestionUl.innerHTML = "";
+
+               if (data.results) {
+                    data.results.forEach(place => {
+                         let li = document.createElement('li');
+
+                         li.textContent = `${place.name}, ${place.country}`;
+
+                         li.addEventListener('click', () => {
+                              searchInput.value = place.name;
+                              suggestionUl.innerHTML = "";
+                         });
+
+                         suggestionUl.appendChild(li);
+                    })
+               } else {
+                    let li = document.createElement('li');
+                    li.innerHTML = `<img class="searchLoader" src="/assets/images/icon-loading.svg" alt="loading...">`;
+                    suggestionUl.appendChild(li);
+               }
+          }, 400);
+     })
 
      form.addEventListener('submit', async (event) => {
           event.preventDefault();
@@ -293,17 +336,23 @@ async function main() {
           location.reload();
      });
 
+
+     document.querySelector('.drop_down_days').addEventListener('mouseover', e => {
+          document.getElementById('hourly-forecast-ul-days').classList.add('showUl');
+     });
+
      document.querySelectorAll('#hourly-forecast-ul-days > li').forEach(e => {
           e.addEventListener('click', (dayClicked) => {
                let day = dayClicked.target.dataset.day;
-               let index = dayNames.findIndex( d => d.toLowerCase() === day)
+               let index = dayNames.findIndex(d => d.toLowerCase() === day)
                let label = labels[index];
                document.querySelector('.daySelected').textContent = day;
 
                addHourlyDataToList(label);
-          })
-     })
 
+               document.getElementById('hourly-forecast-ul-days').classList.remove('showUl');
+          })
+     });
 }
 
 main()

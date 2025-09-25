@@ -1,6 +1,6 @@
 :root {
-     --font-color: #9190a6;
-     --font-color2: rgb(110, 110, 110);
+     --font-color: #a1a0a7;
+     --font-color2: #c5c4c7;
      --font-weight: 500;
      --border: 0.001rem solid rgb(54, 56, 74);
 }
@@ -59,6 +59,12 @@ body {
      animation: spin 2s infinite linear;
 }
 
+.searchLoader {
+     width: 15px;
+     height: 15px;
+     animation: spin 2s infinite linear;
+}
+
 @keyframes spin {
      0% {
           transform: rotate(0deg);
@@ -97,10 +103,6 @@ nav .drop_down_title {
      background-color: #25253F;
 }
 
-nav .drop_down_title span {
-     font-size: 20px;
-}
-
 .drop_down_title .arrow {
      font-size: 13px;
      transform: rotate(90deg);
@@ -115,10 +117,11 @@ nav .drop_down_title span {
      position: absolute;
      right: 0;
      top: 4rem;
-     background-color: #25253F;
+     background-color: #1e1e33;
      border-radius: 10px;
      width: 200px;
      transition: max-height 1s ease, opacity 1s ease;
+     z-index: 90;
 }
 
 .drop_down_content h4 {
@@ -213,6 +216,7 @@ main {
 }
 
 .search div {
+     position: relative;
      display: flex;
      align-items: center;
 }
@@ -226,6 +230,37 @@ main {
      font-size: 16px;
      color: var(--font-color);
      text-transform: capitalize;
+}
+
+.searchSuggestion {
+     position: absolute;
+     top: 110%;
+     left: 0;
+     width: 100%;
+     list-style: none;
+     display: flex;
+     flex-direction: column;
+     gap: 0.2rem;
+     z-index: 50;
+     background-color:#25253F;
+     border-radius: 8px;
+}
+
+.searchSuggestion li {
+     font-weight: 300;
+     font-size: 0.9rem;
+     color: var(--font-color2);
+     cursor: pointer;
+     width: 100%;
+     padding: 0.4rem;
+     margin: 0.2rem;
+     border-radius: 5px;
+     border: 1px solid transparent;
+}
+
+.searchSuggestion li:hover {
+     background-color:#42425f75;
+     border: 1px solid #52525575;
 }
 
 .btn {
@@ -365,7 +400,7 @@ main {
      padding: 0.8rem 0;
      display: grid;
      grid-template-columns: repeat(7, minmax(0, 1fr));
-     gap: 0.4rem;
+     gap: 0.2rem;
 }
 
 .daily-forecast .title {
@@ -449,6 +484,7 @@ main {
 }
 
 .drop_down_ul {
+     display: none;
      max-height: 0;
      font-size: 0.9rem;
      font-weight: 300;
@@ -462,6 +498,10 @@ main {
      border-radius: 10px;
      width: 150px;
      transition: max-height 1s ease, opacity 1s ease;
+}
+
+.showUl {
+     display: inline-block;
 }
 
 .drop_down_days:hover .drop_down_ul {
@@ -561,6 +601,7 @@ input[type="search"]::-webkit-search-cancel-button {
 @media (width <=1350px) {
      .weather {
           width: 100%;
+          padding: 0 2rem;
      }
 
      .search div {
@@ -568,7 +609,7 @@ input[type="search"]::-webkit-search-cancel-button {
      }
 
      .weather-container {
-          width: 85%;
+          width: 80%;
      }
 
      /* .weather-content {
@@ -607,7 +648,13 @@ input[type="search"]::-webkit-search-cancel-button {
      }
 }
 
-@media (width <=750px) {
+@media (width <= 950px ) {
+     .weather-container {
+          width: 85%;
+     }
+}
+
+@media (width <=850px) {
      .search div {
           width: 60%;
      }
@@ -660,7 +707,7 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 
-@media (width <=550px) {
+@media (width <=650px) {
      div.logo img {
           width: 80%;
      }
@@ -668,6 +715,10 @@ input[type="search"]::-webkit-search-cancel-button {
           padding: 0 1rem;
           width: 80%;
           margin: 0 auto;
+     }
+
+     nav .drop_down_title {
+          padding: 0.2rem 0.4rem;
      }
 
      .search {
@@ -702,14 +753,23 @@ input[type="search"]::-webkit-search-cancel-button {
      }
 
      .hourly-forecast-content {
+          width: 90%;
+     }
+}
+
+@media (width <= 500px) {
+     .weather {
+          width: 80%;
+     }
+     
+     .hourly-forecast-content {
           width: 100%;
      }
 }
 
 @media (width <= 380px) {
      .weather {
-          width: 100%;
-          margin: 0;
+          width: 95%;
      }
      nav .drop_down_title {
           padding: 0.3rem;
@@ -735,4 +795,22 @@ input[type="search"]::-webkit-search-cancel-button {
      .todays-weather-now {
           justify-content: space-between;
      }
+     
+     .hourly-forecast-content .title .daySelected {
+          padding: 0.2rem 0.4rem;
+          font-size: 0.8rem;
+     }
+}
+
+@media (width <= 230px) {
+     .todays-weather-content {
+          padding: 0.3rem 0.5rem;
+     }
+     .todays-weather-now {
+          gap: 0.2rem;
+     }
+         .weather-value {
+          font-size: 2rem;
+          
+         }
 }
