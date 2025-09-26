@@ -1,3 +1,20 @@
+
+function handleAPIError() {
+     document.querySelector('.error').style.display = "flex";
+     document.querySelector('main').style.display = "none";
+     document.getElementById('loader').style.display = "none";
+     document.getElementById('weather').style.display = "block";
+}
+
+function handleAPISuccess() {
+     document.getElementById('weather').style.display = "none";
+     document.querySelector('.error').style.display = "none";
+     document.querySelector('main').style.display = "block";
+     document.getElementById('loader').style.display = "inline-block";
+}
+
+let statusFound = true;
+
 async function getLongLat(placeName) {
 
      const urlToLongLat = `https://geocoding-api.open-meteo.com/v1/search?name=${placeName}&count=1&language=en&format=json`;
@@ -5,11 +22,19 @@ async function getLongLat(placeName) {
      let res = await fetch(urlToLongLat);
      let data = await res.json();
 
-     let latitude = data.results[0].latitude;
-     let longitude = data.results[0].longitude;
-     let country = data.results[0].country;
+     if (data.results) {
+          let latitude = data.results[0].latitude;
+          let longitude = data.results[0].longitude;
+          let country = data.results[0].country;
 
-     return { longitude, latitude, country };
+          document.querySelector('.status').style.display = "none";
+          document.querySelector('.weather-container').style.display = "flex";
+          return { longitude, latitude, country };
+     }
+     else {
+          console.log('Place not found');
+          statusFound = false;
+     }
 }
 
 
@@ -30,7 +55,6 @@ async function getWeather(placeName, tempUnit, windUnit, precipitationUnit) {
                location = await getLongLat(placeName);
           }
           else {
-
                location = await new Promise((resolve, reject) => {
                     navigator.geolocation.getCurrentPosition(
                          (position) => {
@@ -45,7 +69,9 @@ async function getWeather(placeName, tempUnit, windUnit, precipitationUnit) {
 
                const urlToPlaceName = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.latitude}&lon=${location.longitude}&zoom=18&addressdetails=1`;
 
-               let response = await fetch(urlToPlaceName, {
+               let response;
+
+               response = await fetch(urlToPlaceName, {
                     headers: {
                          "User-Agent": "MyWeatherApp/1.0 (dnyanu0506@gmail.com)"
                     }
@@ -55,8 +81,10 @@ async function getWeather(placeName, tempUnit, windUnit, precipitationUnit) {
 
           const urlToWeatherData = `https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&daily=temperature_2m_max,temperature_2m_min,weather_code&hourly=temperature_2m,wind_speed_10m,relative_humidity_2m,apparent_temperature,precipitation,weather_code&current=is_day,weather_code&timezone=GMT&wind_speed_unit=${windUnit}&temperature_unit=${tempUnit}&precipitation_unit=${precipitationUnit}`;
 
-          let res = await fetch(urlToWeatherData);
-          let data = await res.json();
+          let res, data;
+
+          res = await fetch(urlToWeatherData);
+          data = await res.json();
 
           let today = new Date();
           let currentHour = today.toISOString().slice(0, 13) + ':00';
@@ -86,16 +114,23 @@ async function getWeather(placeName, tempUnit, windUnit, precipitationUnit) {
           let locationName = placeName.length > 0 ? placeName + ', ' + location.country : locationDetails.address.county + ', ' + locationDetails.address.country;
           let dateNow = today.toString().slice(0, 15);
 
-          document.querySelector('.status').style.display = "none";
-          document.querySelector('.weather-container').style.display = "flex";
+
+          handleAPISuccess();
           return { locationName, dateNow, tempNow, windSpeed, humidity, feelsLike, precipitation, hourly, hourlyData, daily, current, units };
+
      }
      catch (error) {
-          console.error("Error fetching weather:", error);
-          document.querySelector('.status').style.display = "inline-block";
-          document.querySelector('.weather-container').style.display = "none";
-          document.getElementById('weather').style.display = "block";
-          document.getElementById('loader').style.display = "none";
+          if (statusFound) {
+               handleAPIError();
+          }
+          else {
+               console.error("Error fetching weather:", error);
+               document.querySelector('.status').style.display = "inline-block";
+               document.querySelector('.weather-container').style.display = "none";
+               document.getElementById('weather').style.display = "block";
+               document.getElementById('loader').style.display = "none";
+               document.getElementById('searchSuggestion').innerHTML = "";
+          }
      }
 }
 
@@ -154,9 +189,6 @@ function addHourlyDataToList(label) {
 
      let div = document.querySelector(`.daily-forecast-container #${label}`);
      div.classList.add('activeDay');
-
-     console.log(div);
-
 }
 
 async function setWeather(placeName, tempUnit, windUnit, precipitationUnit, day) {
@@ -241,7 +273,6 @@ async function main() {
      let timeout = null;
 
      searchInput.addEventListener('input', async (e) => {
-
           clearTimeout(timeout);
 
           timeout = setTimeout(async () => {
@@ -273,15 +304,16 @@ async function main() {
                     })
                } else {
                     let li = document.createElement('li');
-                    li.innerHTML = `<img class="searchLoader" src="/assets/images/icon-loading.svg" alt="loading...">`;
+                    li.innerHTML = `<img class="searchLoader" src="/assets/images/icon-loading.svg" alt="loading..."> Search in progress`;
                     suggestionUl.appendChild(li);
                }
-          }, 400);
+          }, 300);
      })
 
      form.addEventListener('submit', async (event) => {
           event.preventDefault();
           await setWeather(searchInput.value, 'celsius', 'kmh', 'mm', day);
+          suggestionUl.innerHTML = "";
      });
 
      let getLocationName = () => {
