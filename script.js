@@ -352,6 +352,16 @@ async function main() {
           }
      })
 
+     document.addEventListener('click', (event) => {
+          if (!drop_down_days.contains(event.target)){
+               drop_down_days.classList.remove('active_drop_down_days')
+          }
+
+          if(!drop_down.contains(event.target)) {
+               drop_down.classList.remove('activeDropDown');
+          }
+     });
+
      let celsiusLi = document.getElementById('celsius');
      let fahrenheitLi = document.getElementById('fahrenheit');
      let kmhLi = document.getElementById('kmh');

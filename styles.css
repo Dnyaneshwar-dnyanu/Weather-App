@@ -115,7 +115,7 @@ nav .drop_down_title {
      background-color: #1e1e33;
      border-radius: 10px;
      width: 200px;
-     transition: max-height 1s ease, opacity 1s ease;
+     transition: max-height 0.3s ease, opacity 0.5s ease;
      z-index: 90;
 }
 
@@ -440,7 +440,7 @@ main {
 
 .hourly-forecast-content {
      width: 30%;
-     height: 470px;
+     height: 475px;
      padding: 1.2rem 0;
      background-color: #25253F;
      border-radius: 10px;
@@ -491,7 +491,7 @@ main {
      background-color: #2e2e45;
      border-radius: 10px;
      width: 150px;
-     transition: max-height 1s ease, opacity 1s ease;
+     transition: max-height 0.3s ease, opacity 0.5s ease;
 }
 
 .showUl {
@@ -745,6 +745,7 @@ input[type="search"]::-webkit-search-cancel-button {
 
      .hourly-forecast-content {
           width: 100%;
+          margin-bottom: 10px;
      }
 
      .hourly-forecast-content .title span {
