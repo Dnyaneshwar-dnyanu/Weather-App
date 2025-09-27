@@ -335,7 +335,7 @@ async function main() {
      }
 
      let drop_down = document.querySelector(".drop_down");
-     drop_down.addEventListener( 'click',  () => {
+     drop_down.addEventListener('click', () => {
           if (drop_down.classList.contains('activeDropDown')) {
                drop_down.classList.remove('activeDropDown');
           } else {
@@ -353,14 +353,26 @@ async function main() {
      })
 
      document.addEventListener('click', (event) => {
-          if (!drop_down_days.contains(event.target)){
+          if (!drop_down_days.contains(event.target)) {
                drop_down_days.classList.remove('active_drop_down_days')
           }
 
-          if(!drop_down.contains(event.target)) {
+          if (!drop_down.contains(event.target)) {
                drop_down.classList.remove('activeDropDown');
           }
      });
+
+     document.addEventListener('keydown', (event) => {
+          if (event.key === "Escape") {
+               if (!drop_down_days.contains(event.target)) {
+                    drop_down_days.classList.remove('active_drop_down_days')
+               }
+
+               if (!drop_down.contains(event.target)) {
+                    drop_down.classList.remove('activeDropDown');
+               }
+          }
+     })
 
      let celsiusLi = document.getElementById('celsius');
      let fahrenheitLi = document.getElementById('fahrenheit');
