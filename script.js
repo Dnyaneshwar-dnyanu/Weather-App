@@ -13,7 +13,7 @@ function handleAPISuccess() {
      document.getElementById('loader').style.display = "inline-block";
 }
 
-let statusFound = true;
+let statusFound = "found";
 
 async function getLongLat(placeName) {
 
@@ -32,8 +32,7 @@ async function getLongLat(placeName) {
           return { longitude, latitude, country };
      }
      else {
-          console.log('Place not found');
-          statusFound = false;
+          statusFound = "not found";
      }
 }
 
@@ -50,7 +49,7 @@ async function getWeather(placeName, tempUnit, windUnit, precipitationUnit) {
           document.getElementById('loader').style.display = "block";
           document.getElementById('weather').style.display = "none";
 
-          let location, locationDetails;
+          let location = null, locationDetails;
           if (placeName.length > 0) {
                location = await getLongLat(placeName);
           }
@@ -63,73 +62,88 @@ async function getWeather(placeName, tempUnit, windUnit, precipitationUnit) {
                                    latitude: position.coords.latitude
                               });
                          },
-                         (error) => reject(error.message)
+                         (error) => {
+                              if (error.code === error.PERMISSION_DENIED) {
+                                   reject("Permission denied");
+                              }
+                         }
                     );
+                    statusFound = "Access denied";
                });
 
-               const urlToPlaceName = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.latitude}&lon=${location.longitude}&zoom=18&addressdetails=1`;
+               if (location) {
+                    const urlToPlaceName = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.latitude}&lon=${location.longitude}&zoom=18&addressdetails=1`;
 
-               let response;
+                    let response;
 
-               response = await fetch(urlToPlaceName, {
-                    headers: {
-                         "User-Agent": "MyWeatherApp/1.0 (dnyanu0506@gmail.com)"
-                    }
-               });
-               locationDetails = await response.json();
+                    response = await fetch(urlToPlaceName, {
+                         headers: {
+                              "User-Agent": "MyWeatherApp/1.0 (dnyanu0506@gmail.com)"
+                         }
+                    });
+                    locationDetails = await response.json();
+               }
           }
 
-          const urlToWeatherData = `https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&daily=temperature_2m_max,temperature_2m_min,weather_code&hourly=temperature_2m,wind_speed_10m,relative_humidity_2m,apparent_temperature,precipitation,weather_code&current=is_day,weather_code&timezone=GMT&wind_speed_unit=${windUnit}&temperature_unit=${tempUnit}&precipitation_unit=${precipitationUnit}`;
+          if (location) {
+               const urlToWeatherData = `https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&daily=temperature_2m_max,temperature_2m_min,weather_code&hourly=temperature_2m,wind_speed_10m,relative_humidity_2m,apparent_temperature,precipitation,weather_code&current=is_day,weather_code&timezone=GMT&wind_speed_unit=${windUnit}&temperature_unit=${tempUnit}&precipitation_unit=${precipitationUnit}`;
 
-          let res, data;
+               let res, data;
 
-          res = await fetch(urlToWeatherData);
-          data = await res.json();
+               res = await fetch(urlToWeatherData);
+               data = await res.json();
 
-          let today = new Date();
-          let currentHour = today.toISOString().slice(0, 13) + ':00';
-          let index = data.hourly.time.indexOf(currentHour);
-          let tempNow = parseInt(data.hourly.temperature_2m[index]) + data.hourly_units.temperature_2m;
-          let windSpeed = data.hourly.wind_speed_10m[index] + data.hourly_units.wind_speed_10m;
-          let humidity = data.hourly.relative_humidity_2m[index] + data.hourly_units.relative_humidity_2m;
-          let feelsLike = data.hourly.apparent_temperature[index] + data.hourly_units.apparent_temperature;
-          let precipitation = data.hourly.precipitation[index] + data.hourly_units.precipitation;
+               let today = new Date();
+               let currentHour = today.toISOString().slice(0, 13) + ':00';
+               let index = data.hourly.time.indexOf(currentHour);
+               let tempNow = parseInt(data.hourly.temperature_2m[index]) + data.hourly_units.temperature_2m;
+               let windSpeed = data.hourly.wind_speed_10m[index] + data.hourly_units.wind_speed_10m;
+               let humidity = data.hourly.relative_humidity_2m[index] + data.hourly_units.relative_humidity_2m;
+               let feelsLike = data.hourly.apparent_temperature[index] + data.hourly_units.apparent_temperature;
+               let precipitation = data.hourly.precipitation[index] + data.hourly_units.precipitation;
 
-          let units = data.daily_units.temperature_2m_max;
-          let daily = data.daily;
+               let units = data.daily_units.temperature_2m_max;
+               let daily = data.daily;
 
-          let i = 0;
-          while (i < data.hourly.time.length) {
-               let day = (new Date(data.hourly.time[i])).getDay();
-               let label = labels[day];
-               hourlyData[label].time = data.hourly.time.slice(i, i + 24);
-               hourlyData[label].temperature_2m = data.hourly.temperature_2m.slice(i, i + 24);
-               hourlyData[label].weather_code = data.hourly.weather_code.slice(i, i + 24);
-               i = i + 24;
+               let i = 0;
+               while (i < data.hourly.time.length) {
+                    let day = (new Date(data.hourly.time[i])).getDay();
+                    let label = labels[day];
+                    hourlyData[label].time = data.hourly.time.slice(i, i + 24);
+                    hourlyData[label].temperature_2m = data.hourly.temperature_2m.slice(i, i + 24);
+                    hourlyData[label].weather_code = data.hourly.weather_code.slice(i, i + 24);
+                    i = i + 24;
+               }
+
+               let hourly = data.hourly;
+               let current = data.current;
+
+               let locationName = placeName.length > 0 ? placeName + ', ' + location.country : locationDetails.address.county + ', ' + locationDetails.address.country;
+               let dateNow = today.toString().slice(0, 15);
+
+
+               handleAPISuccess();
+               return { locationName, dateNow, tempNow, windSpeed, humidity, feelsLike, precipitation, hourly, hourlyData, daily, current, units };
           }
-
-          let hourly = data.hourly;
-          let current = data.current;
-
-          let locationName = placeName.length > 0 ? placeName + ', ' + location.country : locationDetails.address.county + ', ' + locationDetails.address.country;
-          let dateNow = today.toString().slice(0, 15);
-
-
-          handleAPISuccess();
-          return { locationName, dateNow, tempNow, windSpeed, humidity, feelsLike, precipitation, hourly, hourlyData, daily, current, units };
 
      }
      catch (error) {
-          if (statusFound) {
+          if (statusFound == "found") {
                handleAPIError();
           }
-          else {
+          else if (statusFound == "not found") {
                console.error("Error fetching weather:", error);
                document.querySelector('.status').style.display = "inline-block";
                document.querySelector('.weather-container').style.display = "none";
                document.getElementById('weather').style.display = "block";
                document.getElementById('loader').style.display = "none";
                document.getElementById('searchSuggestion').innerHTML = "";
+          }
+          else {
+               document.querySelector(".error").style.display = "none";
+               document.querySelector(".weather-container").style.display = "flex";
+               document.getElementById("weather").style.display = "block";
+               document.getElementById("loader").style.display = "none";
           }
      }
 }
@@ -320,6 +334,24 @@ async function main() {
           return searchInput.value;
      }
 
+     let drop_down = document.querySelector(".drop_down");
+     drop_down.addEventListener( 'click',  () => {
+          if (drop_down.classList.contains('activeDropDown')) {
+               drop_down.classList.remove('activeDropDown');
+          } else {
+               drop_down.classList.add('activeDropDown');
+          }
+     })
+
+     let drop_down_days = document.querySelector('.drop_down_days');
+     drop_down_days.addEventListener('click', () => {
+          if (drop_down_days.classList.contains('active_drop_down_days')) {
+               drop_down_days.classList.remove('active_drop_down_days');
+          } else {
+               drop_down_days.classList.add('active_drop_down_days');
+          }
+     })
+
      let celsiusLi = document.getElementById('celsius');
      let fahrenheitLi = document.getElementById('fahrenheit');
      let kmhLi = document.getElementById('kmh');
@@ -332,36 +364,42 @@ async function main() {
           setWeather(placeName, 'celsius', 'kmh', 'mm', day);
           celsiusLi.classList.toggle('active');
           fahrenheitLi.classList.toggle('active');
+          drop_down.classList.remove('activeDropDown');
      })
      fahrenheitLi.addEventListener('click', (e) => {
           let placeName = getLocationName();
           setWeather(placeName, 'fahrenheit', 'kmh', 'mm', day);
           fahrenheitLi.classList.toggle('active');
           celsiusLi.classList.toggle('active');
+          drop_down.classList.remove('activeDropDown');
      })
      kmhLi.addEventListener('click', (e) => {
           let placeName = getLocationName();
           setWeather(placeName, 'celsius', 'kmh', 'mm', day);
           kmhLi.classList.toggle('active');
           mphLi.classList.toggle('active');
+          drop_down.classList.remove('activeDropDown');
      })
      mphLi.addEventListener('click', (e) => {
           let placeName = getLocationName();
           setWeather(placeName, 'celsius', 'mph', 'mm', day);
           mphLi.classList.toggle('active');
           kmhLi.classList.toggle('active');
+          drop_down.classList.remove('activeDropDown');
      })
      mmLi.addEventListener('click', (e) => {
           let placeName = getLocationName();
           setWeather(placeName, 'celsius', 'kmh', 'mm', day);
           mmLi.classList.toggle('active');
           inchLi.classList.toggle('active');
+          drop_down.classList.remove('activeDropDown');
      })
      inchLi.addEventListener('click', (e) => {
           let placeName = getLocationName();
           setWeather(placeName, 'celsius', 'kmh', 'inch', day);
           inchLi.classList.toggle('active');
           mmLi.classList.toggle('active');
+          drop_down.classList.remove('activeDropDown');
      })
 
      document.querySelector('.retryBtn').addEventListener('click', () => {
@@ -383,6 +421,7 @@ async function main() {
                addHourlyDataToList(label);
 
                document.getElementById('hourly-forecast-ul-days').classList.remove('showUl');
+               document.querySelector('drop_down_days').classList.remove('active_drop_down_days');
           })
      });
 }

@@ -94,6 +94,7 @@ nav .logo img {
 }
 
 nav .drop_down_title {
+     cursor: pointer;
      display: flex;
      align-items: center;
      gap: 0.5rem;
@@ -101,12 +102,6 @@ nav .drop_down_title {
      padding: 0.5rem 0.7rem;
      border-radius: 0.25rem;
      background-color: #25253F;
-}
-
-.drop_down_title .arrow {
-     font-size: 13px;
-     transform: rotate(90deg);
-     cursor: pointer;
 }
 
 .drop_down_content {
@@ -169,7 +164,7 @@ li.active .check {
      margin: 0.8rem 0;
 }
 
-.drop_down:hover .drop_down_content {
+.activeDropDown .drop_down_content {
      max-height: 376px;
      opacity: 1;
 }
@@ -353,7 +348,6 @@ main {
 .todays-weather-content .todays-weather-now {
      font-family: 'DM Sans bold';
      font-size: 4rem;
-     /* font-style: italic; */
 }
 
 .todays-weather-now {
@@ -386,7 +380,7 @@ main {
 
 .desc-box h4 {
      font-weight: 300;
-     font-size: 0.7rem;
+     font-size: 0.85rem;
      color: var(--font-color);
 }
 
@@ -394,6 +388,7 @@ main {
      font-size: 1.3rem;
 }
 
+/* Daily Forecast Container */
 
 .daily-forecast .daily-forecast-container {
      width: 100%;
@@ -404,7 +399,6 @@ main {
 }
 
 .daily-forecast .title {
-     font-size: 0.87rem;
      letter-spacing: 1px;
 }
 
@@ -504,7 +498,7 @@ main {
      display: inline-block;
 }
 
-.drop_down_days:hover .drop_down_ul {
+.active_drop_down_days .drop_down_ul {
      max-height: 220px;
      opacity: 1;
 }
@@ -523,6 +517,7 @@ main {
 }
 
 .hourly-forecast-content ul.hourly-forecast-values li {
+     height: 40px;
      padding: 0.2rem 0.5rem;
      display: flex;
      justify-content: space-between;
@@ -829,10 +824,6 @@ input[type="search"]::-webkit-search-cancel-button {
      }
 
      .todays-weather-desc .desc-box h4 {
-          font-size: 1rem;
-     }
-
-     .daily-forecast .title {
           font-size: 1rem;
      }
 }
