@@ -79,7 +79,7 @@ body {
 }
 
 .weather {
-     /* max-width: 1570px; */
+     max-width: 1570px;
      width: 100%;
      margin: 0 auto;
      padding: 0rem 4rem;
