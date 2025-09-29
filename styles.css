@@ -79,7 +79,7 @@ body {
 }
 
 .weather {
-     max-width: 1570px;
+     /* max-width: 1570px; */
      width: 100%;
      margin: 0 auto;
      padding: 0rem 4rem;
@@ -670,7 +670,6 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 ::-webkit-scrollbar-track {
-     /* background: #1f1f1f; */
      border-radius: 10px;
 }
 
@@ -733,6 +732,10 @@ input[type="search"]::-webkit-search-cancel-button {
           width: 60%;
      }
 
+     .weather {
+          padding: 0rem 1rem;
+     }
+
      .weather-container {
           width: 95%;
      }
@@ -788,10 +791,6 @@ input[type="search"]::-webkit-search-cancel-button {
 
 
 @media (width <=650px) {
-     .voice_search_caption {
-          display: none;
-     }
-     
      main {
           font-size: 1rem;
      }
