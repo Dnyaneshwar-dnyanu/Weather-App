@@ -284,13 +284,21 @@ async function main() {
      let form = document.querySelector('.searchForm');
      let searchInput = document.getElementById('searchInput');
      let suggestionUl = document.getElementById('searchSuggestion');
+     let searchBox = document.querySelector(".search > div");
+
      let timeout = null;
 
+     searchInput.addEventListener('click', () => {
+          searchBox.style.outlineColor = "white";
+          console.log(searchBox);
+     })
      searchInput.addEventListener('input', async (e) => {
           clearTimeout(timeout);
 
           timeout = setTimeout(async () => {
                const query = searchInput.value;
+
+               suggestionUl.innerHTML = "";
 
                if (query.length < 2) {
                     suggestionUl.innerHTML = "";
@@ -318,11 +326,15 @@ async function main() {
                     })
                } else {
                     let li = document.createElement('li');
+                    setTimeout(() => {
+                         li.innerHTML = `No search result found!`;
+                         suggestionUl.appendChild(li);
+                    }, 800);
                     li.innerHTML = `<img class="searchLoader" src="/assets/images/icon-loading.svg" alt="loading..."> Search in progress`;
                     suggestionUl.appendChild(li);
                }
           }, 300);
-     })
+     });
 
      form.addEventListener('submit', async (event) => {
           event.preventDefault();
@@ -332,6 +344,52 @@ async function main() {
 
      let getLocationName = () => {
           return searchInput.value;
+     }
+
+     const speechRecognition = window.speechRecognition || window.webkitSpeechRecognition;
+     if (!speechRecognition) {
+          alert("Your browser won't support for voice search");
+     }
+     else {
+          const recognition = new SpeechRecognition();
+          recognition.lang = "en-US";
+          recognition.interimResults = true;
+          recognition.maxAlternatives = 1;
+
+          let voiceBtn = document.getElementById('voice_btn');
+          let voiceIcon = document.querySelector('#voice_btn > img');
+          let isListening = false;
+
+          voiceIcon.addEventListener('click', () => {
+               if (isListening) {
+                    recognition.stop();
+                    return;
+               } else {
+                    recognition.start();
+               }
+          })
+          
+          recognition.onresult = (event) => {
+               let transcript = event.results[0][0].transcript;
+               console.log("You said : ", transcript);
+               searchInput.value = transcript;
+          }
+          
+          recognition.onstart = () => {
+               isListening = true;
+               voiceBtn.classList.add('isListening');
+               console.log("Recognition is started....");
+          };
+
+          recognition.onend = () => {
+               isListening = false;
+               voiceBtn.classList.remove('isListening');
+               console.log("Recognition is stopped....");
+          }
+
+          recognition.onerror = (event) => {
+               console.error("Search voice error:", event.error);
+          };
      }
 
      let drop_down = document.querySelector(".drop_down");
@@ -360,6 +418,11 @@ async function main() {
           if (!drop_down.contains(event.target)) {
                drop_down.classList.remove('activeDropDown');
           }
+
+          if(!searchInput.contains(event.target)) {
+               searchBox.style.outlineColor = "transparent";
+          }
+          suggestionUl.innerHTML = "";
      });
 
      document.addEventListener('keydown', (event) => {
@@ -371,6 +434,7 @@ async function main() {
                if (!drop_down.contains(event.target)) {
                     drop_down.classList.remove('activeDropDown');
                }
+               suggestionUl.innerHTML = "";
           }
      })
 

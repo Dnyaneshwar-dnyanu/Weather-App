@@ -14,10 +14,10 @@
 
 
 @font-face {
-  font-family: "Bricolage Grotesque";
-  src: url("../assets/fonts/Bricolage_Grotesque/static/BricolageGrotesque-Bold.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
+     font-family: "Bricolage Grotesque";
+     src: url("../assets/fonts/Bricolage_Grotesque/static/BricolageGrotesque-Bold.ttf") format("truetype");
+     font-weight: 700;
+     font-style: normal;
 }
 
 @font-face {
@@ -45,6 +45,9 @@ body {
 
 body {
      font-family: 'DM Sans', sans-serif;
+     display: flex;
+     justify-content: center;
+     align-items: center;
 }
 
 .loader img {
@@ -76,6 +79,9 @@ body {
 }
 
 .weather {
+     max-width: 1570px;
+     width: 100%;
+     margin: 0 auto;
      padding: 0rem 4rem;
      font-family: agbalumo;
 }
@@ -200,11 +206,11 @@ main {
      font-weight: 600;
 }
 
-.search div span {
+.search div .search_icon {
      width: 20px;
 }
 
-.search div span img {
+.search div .search_icon img {
      padding-top: 0.3rem;
      width: 100%;
      height: 100%;
@@ -214,6 +220,7 @@ main {
      position: relative;
      display: flex;
      align-items: center;
+     outline: 2px solid transparent;
 }
 
 .search div input {
@@ -237,7 +244,7 @@ main {
      flex-direction: column;
      gap: 0.2rem;
      z-index: 50;
-     background-color:#25253F;
+     background-color: #25253F;
      border-radius: 8px;
 }
 
@@ -254,16 +261,98 @@ main {
 }
 
 .searchSuggestion li:hover {
-     background-color:#42425f75;
+     background-color: #42425f75;
      border: 1px solid #52525575;
 }
 
-.btn {
-     padding: 0.675rem 1.07rem;
-     border-radius: 8px;
-     background-color: #4657D9;
+.search .voice_search {
+     position: relative;
+     background: none;
+     width: 35px;
+     height: 30px;
+     padding: 0;
      border: none;
-     color: var(--font-color);
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     cursor: pointer;
+     border-radius: 50%;
+}
+
+.voice_search_caption {
+     display: none;
+     width: 110px;
+     position: absolute;
+     bottom: -35px;
+     left: 15px;
+     font-weight: normal;
+     padding: 0.4rem 0.2rem;
+     font-size: 0.7rem;
+     background: #282828;
+     color: white;
+     border: 1px solid white;
+}
+
+.search .voice_search:hover .voice_search_caption{
+     display: inline;
+}
+
+.search .voice_search .mic-icon {
+     position: relative;
+     z-index: 2;
+     border-radius: 50%;
+     width: 100%;
+     height: 100%;
+}
+
+.search .voice_search:hover .mic-icon {
+     background: linear-gradient(120deg, #0f76dd, #444444);
+}
+
+.wave {
+     display: none;
+     position: absolute;
+     z-index: 1;
+     width: 28px;
+     height: 28px;
+     border-radius: 50%;
+     opacity: 0.6;
+     background: linear-gradient(120deg, #0f76dd, #444444);
+     animation: pulse 1s infinite ease-in-out;
+}
+
+.search .isListening .wave {
+     display: inline-block;
+}
+
+@keyframes pulse {
+     0% {
+          transform: scale(1);
+          opacity: 0.4;
+     }
+     50% {     
+          transform: scale(1.5);
+          opacity: 0.9;
+     }
+     100% {
+          transform: scale(2);
+          opacity: 0;
+     }
+}
+
+.wave1 { animation-delay: 0s;}
+.wave2 { animation-delay: 0.3s;}
+.wave3 { animation-delay: 0.5s;}
+
+
+.btn {
+     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+     padding: 0.775rem 1.07rem;
+     border-radius: 8px;
+     background-color: #1e2a85;
+     font-weight: 600;
+     border: none;
+     color: #dad8e7;
      letter-spacing: 1px;
      cursor: pointer;
 }
@@ -548,7 +637,7 @@ main {
      justify-content: center;
 }
 
-.error > :first-child {
+.error> :first-child {
      width: 50px;
 }
 
@@ -593,6 +682,7 @@ input[type="search"]::-webkit-search-cancel-button {
      background: #37358a;
 }
 
+
 @media (width <=1350px) {
      .weather {
           width: 100%;
@@ -630,7 +720,7 @@ input[type="search"]::-webkit-search-cancel-button {
      }
 }
 
-@media (width <= 980px ) {
+@media (width <=980px) {
      .weather-container {
           width: 85%;
      }
@@ -644,7 +734,7 @@ input[type="search"]::-webkit-search-cancel-button {
      .weather-container {
           width: 95%;
      }
-     
+
      .todays-weather-content {
           background-image: url('/assets/images/bg-today-small.svg');
      }
@@ -699,9 +789,11 @@ input[type="search"]::-webkit-search-cancel-button {
      main {
           font-size: 1rem;
      }
+
      div.logo img {
           width: 80%;
      }
+
      .weather {
           padding: 0 1rem;
           width: 80%;
@@ -762,11 +854,11 @@ input[type="search"]::-webkit-search-cancel-button {
      }
 }
 
-@media (width <= 500px) {
+@media (width <=500px) {
      .weather {
           width: 95%;
      }
-     
+
      .hourly-forecast-content {
           width: 100%;
      }
@@ -775,7 +867,7 @@ input[type="search"]::-webkit-search-cancel-button {
           height: 70vh;
      }
 
-     .error > :first-child {
+     .error> :first-child {
           width: 35px;
      }
 
@@ -794,10 +886,11 @@ input[type="search"]::-webkit-search-cancel-button {
      }
 }
 
-@media (width <= 380px) {
+@media (width <=380px) {
      .weather {
           width: 95%;
      }
+
      nav .drop_down_title {
           padding: 0.3rem;
           font-size: 12px;
@@ -816,6 +909,7 @@ input[type="search"]::-webkit-search-cancel-button {
           padding: 0 0.3rem;
           font-size: 1.3rem;
      }
+
      .weather-value {
           font-size: 3rem;
      }
@@ -829,15 +923,17 @@ input[type="search"]::-webkit-search-cancel-button {
      }
 }
 
-@media (width <= 230px) {
+@media (width <=230px) {
      .todays-weather-content {
           padding: 0.3rem 0.5rem;
      }
+
      .todays-weather-now {
           gap: 0.2rem;
      }
-         .weather-value {
+
+     .weather-value {
           font-size: 2rem;
-          
-         }
+
+     }
 }

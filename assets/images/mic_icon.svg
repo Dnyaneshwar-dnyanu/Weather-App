@@ -1,0 +1,74 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    /* New styles for the two-part mic body */
+    .mic-body-top {
+      fill: #4285F4; /* Blue */
+    }
+    .mic-body-bottom {
+      fill: #FBBC05; /* Yellow/Gold */
+    }
+    /* Updated style for the stand to be filled/thicker */
+    .mic-stand {
+      fill: #333;
+      stroke: #333;
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+    .wave {
+      fill: none;
+      stroke: #34A853;
+      stroke-width: 3;
+      opacity: 0.7;
+      stroke-linecap: round;
+      animation: pulse 2s infinite;
+    }
+    .wave2 {
+      stroke: #FBBC05;
+      animation-delay: 0.4s;
+    }
+    .wave3 {
+      stroke: #EA4335;
+      animation-delay: 0.8s;
+    }
+    @keyframes pulse {
+      0% {
+        r: 25;
+        opacity: 0.8;
+      }
+      70% {
+        r: 45;
+        opacity: 0;
+      }
+      100% {
+        r: 25;
+        opacity: 0;
+      }
+    }
+  </style>
+
+  <circle class="wave" cx="60" cy="60" r="25"/>
+  <circle class="wave wave2" cx="60" cy="60" r="25"/>
+  <circle class="wave wave3" cx="60" cy="60" r="25"/>
+
+  <path class="mic-body-top" d="M 60,20
+       a 15,15 0 0 1 15,15 
+       L 75,50 
+       a 15,15 0 0 0 -15,15 
+       a 15,15 0 0 0 -15,-15 
+       L 45,35 
+       a 15,15 0 0 1 15,-15 Z" />
+
+  <path class="mic-body-bottom" d="M 45,50 
+       L 45,60 
+       a 15,15 0 0 0 30,0 
+       L 75,50 
+       a 15,15 0 0 0 -15,-15 
+       a 15,15 0 0 0 -15,15 Z" />
+
+
+  <path d="M40 70 C40 85 50 90 60 90 C70 90 80 85 80 70" fill="none" stroke="#333" stroke-width="6" stroke-linecap="round"/>
+  
+  <line x1="60" y1="80" x2="60" y2="95" stroke="#333" stroke-width="8" stroke-linecap="round"/>
+  
+  <line x1="50" y1="98" x2="70" y2="98" stroke="#333" stroke-width="6" stroke-linecap="round"/>
+</svg>

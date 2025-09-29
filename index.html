@@ -62,12 +62,19 @@
                <form class="searchForm" action="/search" method="get" autocomplete="off">
                     <div class="search">
                          <div>
-                              <span><img src="/assets/images/icon-search.svg" alt=""></span>
+                              <span class="search_icon"><img src="/assets/images/icon-search.svg" alt=""></span>
                               <input type="search" name="searchWeather" id="searchInput"
                                    placeholder="Search for a place..." required>
                               <ul id="searchSuggestion" class="searchSuggestion">
 
                               </ul>
+                              <button type="button" id="voice_btn" class="voice_search">
+                                   <img src="/images/voice_logo.png" alt="Search by voice" class="mic-icon">
+                                   <span class="voice_search_caption">Search by voice</span>
+                                   <span class="wave wave1"></span>
+                                   <span class="wave wave2"></span>
+                                   <span class="wave wave3"></span>
+                              </button>
                          </div>
                          <button type="submit" class="btn">Search</button>
                     </div>
