@@ -47,7 +47,6 @@ body {
      font-family: 'DM Sans', sans-serif;
      display: flex;
      justify-content: center;
-     align-items: center;
 }
 
 .loader img {
