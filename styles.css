@@ -97,6 +97,7 @@ nav {
 
 nav .logo img {
      width: 200px;
+
 }
 
 nav .drop_down_title {
@@ -298,6 +299,7 @@ main {
 }
 
 .search .voice_search .mic-icon {
+     filter: invert();
      position: relative;
      z-index: 2;
      border-radius: 50%;
@@ -306,7 +308,7 @@ main {
 }
 
 .search .voice_search:hover .mic-icon {
-     background: linear-gradient(120deg, #0f76dd, #444444);
+     background-color: rgb(145, 144, 144);
 }
 
 .wave {
@@ -786,6 +788,10 @@ input[type="search"]::-webkit-search-cancel-button {
 
 
 @media (width <=650px) {
+     .voice_search_caption {
+          display: none;
+     }
+     
      main {
           font-size: 1rem;
      }
