@@ -63,8 +63,7 @@ You can search for any location, use your current geolocation, and view detailed
 <h2 id="links">🔗 Links</h2>
 
 * **Live Site URL:** [Weather Now](https://sunflick.netlify.app/)
-* **Solution URL:** [Frontend Mentor Solution]([https://your-solution-url.com](https://www.frontendmentor.io/solutions/mobile-first-weather-app-using-css-grid-and-apis-ihQD_TrxoJ
-))
+* **Solution URL:** [Frontend Mentor Solution](https://www.frontendmentor.io/solutions/mobile-first-weather-app-using-css-grid-and-apis-ihQD_TrxoJ)
 
 ---
 
