@@ -19,20 +19,25 @@ async function getLongLat(placeName) {
 
      const urlToLongLat = `https://geocoding-api.open-meteo.com/v1/search?name=${placeName}&count=1&language=en&format=json`;
 
-     let res = await fetch(urlToLongLat);
-     let data = await res.json();
+     try {
 
-     if (data.results) {
-          let latitude = data.results[0].latitude;
-          let longitude = data.results[0].longitude;
-          let country = data.results[0].country;
+          let res = await fetch(urlToLongLat);
+          let data = await res.json();
 
-          document.querySelector('.status').style.display = "none";
-          document.querySelector('.weather-container').style.display = "flex";
-          return { longitude, latitude, country };
-     }
-     else {
-          statusFound = "not found";
+          if (data.results) {
+               let latitude = data.results[0].latitude;
+               let longitude = data.results[0].longitude;
+               let country = data.results[0].country;
+
+               document.querySelector('.status').style.display = "none";
+               document.querySelector('.weather-container').style.display = "flex";
+               return { longitude, latitude, country };
+          }
+          else {
+               statusFound = "not found";
+          }
+     } catch {
+          handleAPIError();
      }
 }
 
@@ -85,46 +90,46 @@ async function getWeather(placeName, tempUnit, windUnit, precipitationUnit) {
                }
           }
 
-          if (location) {
-               const urlToWeatherData = `https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&daily=temperature_2m_max,temperature_2m_min,weather_code&hourly=temperature_2m,wind_speed_10m,relative_humidity_2m,apparent_temperature,precipitation,weather_code&current=is_day,weather_code&timezone=GMT&wind_speed_unit=${windUnit}&temperature_unit=${tempUnit}&precipitation_unit=${precipitationUnit}`;
 
-               let res, data;
+          const urlToWeatherData = `https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&daily=temperature_2m_max,temperature_2m_min,weather_code&hourly=temperature_2m,wind_speed_10m,relative_humidity_2m,apparent_temperature,precipitation,weather_code&current=is_day,weather_code&timezone=GMT&wind_speed_unit=${windUnit}&temperature_unit=${tempUnit}&precipitation_unit=${precipitationUnit}`;
 
-               res = await fetch(urlToWeatherData);
-               data = await res.json();
+          let res, data;
 
-               let today = new Date();
-               let currentHour = today.toISOString().slice(0, 13) + ':00';
-               let index = data.hourly.time.indexOf(currentHour);
-               let tempNow = parseInt(data.hourly.temperature_2m[index]) + data.hourly_units.temperature_2m;
-               let windSpeed = data.hourly.wind_speed_10m[index] + data.hourly_units.wind_speed_10m;
-               let humidity = data.hourly.relative_humidity_2m[index] + data.hourly_units.relative_humidity_2m;
-               let feelsLike = data.hourly.apparent_temperature[index] + data.hourly_units.apparent_temperature;
-               let precipitation = data.hourly.precipitation[index] + data.hourly_units.precipitation;
+          res = await fetch(urlToWeatherData);
+          data = await res.json();
 
-               let units = data.daily_units.temperature_2m_max;
-               let daily = data.daily;
+          let today = new Date();
+          let currentHour = today.toISOString().slice(0, 13) + ':00';
+          let index = data.hourly.time.indexOf(currentHour);
+          let tempNow = parseInt(data.hourly.temperature_2m[index]) + data.hourly_units.temperature_2m;
+          let windSpeed = data.hourly.wind_speed_10m[index] + data.hourly_units.wind_speed_10m;
+          let humidity = data.hourly.relative_humidity_2m[index] + data.hourly_units.relative_humidity_2m;
+          let feelsLike = data.hourly.apparent_temperature[index] + data.hourly_units.apparent_temperature;
+          let precipitation = data.hourly.precipitation[index] + data.hourly_units.precipitation;
 
-               let i = 0;
-               while (i < data.hourly.time.length) {
-                    let day = (new Date(data.hourly.time[i])).getDay();
-                    let label = labels[day];
-                    hourlyData[label].time = data.hourly.time.slice(i, i + 24);
-                    hourlyData[label].temperature_2m = data.hourly.temperature_2m.slice(i, i + 24);
-                    hourlyData[label].weather_code = data.hourly.weather_code.slice(i, i + 24);
-                    i = i + 24;
-               }
+          let units = data.daily_units.temperature_2m_max;
+          let daily = data.daily;
 
-               let hourly = data.hourly;
-               let current = data.current;
-
-               let locationName = placeName.length > 0 ? placeName + ', ' + location.country : locationDetails.address.county + ', ' + locationDetails.address.country;
-               let dateNow = today.toString().slice(0, 15);
-
-
-               handleAPISuccess();
-               return { locationName, dateNow, tempNow, windSpeed, humidity, feelsLike, precipitation, hourly, hourlyData, daily, current, units };
+          let i = 0;
+          while (i < data.hourly.time.length) {
+               let day = (new Date(data.hourly.time[i])).getDay();
+               let label = labels[day];
+               hourlyData[label].time = data.hourly.time.slice(i, i + 24);
+               hourlyData[label].temperature_2m = data.hourly.temperature_2m.slice(i, i + 24);
+               hourlyData[label].weather_code = data.hourly.weather_code.slice(i, i + 24);
+               i = i + 24;
           }
+
+          let hourly = data.hourly;
+          let current = data.current;
+
+          let locationName = placeName.length > 0 ? placeName + ', ' + location.country : locationDetails.address.county + ', ' + locationDetails.address.country;
+          let dateNow = today.toString().slice(0, 15);
+
+
+          handleAPISuccess();
+          return { locationName, dateNow, tempNow, windSpeed, humidity, feelsLike, precipitation, hourly, hourlyData, daily, current, units };
+
 
      }
      catch (error) {
@@ -189,7 +194,7 @@ function addHourlyDataToList(label) {
           if (time == 0) { time = 12 }
 
           li.innerHTML = `
-                    <span class="hourly-forecast-icons"><img src="/images/${getWeatherIcon(weather_code_value)}" alt="">${time} ${ampm}</span><span>${temp}&deg;</span>`;
+                    <span class="hourly-forecast-icons"><img src="/assets/images/${getWeatherIcon(weather_code_value)}" alt="">${time} ${ampm}</span><span>${temp}&deg;</span>`;
 
           i++;
      });
@@ -228,7 +233,7 @@ async function setWeather(placeName, tempUnit, windUnit, precipitationUnit, day)
      feelsLike.textContent = weatherData.feelsLike;
      precipitation.textContent = weatherData.precipitation;
      currentIcon.src = getWeatherIcon(weatherData.current.weather_code, weatherData.current.is_day);
-     todaysWeatherIcon.src = '/images/' + getWeatherIcon(weatherData.current.weather_code, weatherData.current.is_day);
+     todaysWeatherIcon.src = '/assets/images/' + getWeatherIcon(weatherData.current.weather_code, weatherData.current.is_day);
 
      let daysHTML = "", hourlyHTML = "";
 
@@ -237,7 +242,7 @@ async function setWeather(placeName, tempUnit, windUnit, precipitationUnit, day)
 
           daysHTML += `<div id="${today.substring(0, 3)}" class="forecast-desc-box ${index == 0 ? "activeDay" : ""}">
                                    <h4 class="day">${today.substring(0, 3)}</h4>
-                                   <img src="/images/${getWeatherIcon(weatherData.daily.weather_code[index], weatherData.current.is_day)}" alt="">
+                                   <img src="/assets/images/${getWeatherIcon(weatherData.daily.weather_code[index], weatherData.current.is_day)}" alt="">
                                    <div class="forecast-values">
                                         <span class="highTemp">${parseInt(weatherData.daily.temperature_2m_max[index])}&deg;</span>
                                         <span class="lowTemp">${parseInt(weatherData.daily.temperature_2m_min[index])}&deg;</span>
@@ -268,7 +273,7 @@ async function setWeather(placeName, tempUnit, windUnit, precipitationUnit, day)
           }
 
           let temp = parseInt(weatherData.hourlyData[label].temperature_2m[i], 10);
-          hourlyHTML += `<li><span class="hourly-forecast-icons"><img src="/images/${getWeatherIcon(weatherData.hourly.weather_code[i], weatherData.current.is_day)}" alt="">${time} ${ampm}</span><span>${temp}&deg;</span></li>`
+          hourlyHTML += `<li><span class="hourly-forecast-icons"><img src="/assets/images/${getWeatherIcon(weatherData.hourly.weather_code[i], weatherData.current.is_day)}" alt="">${time} ${ampm}</span><span>${temp}&deg;</span></li>`
      }
 
      hourlyForecast.innerHTML = hourlyHTML;
@@ -290,7 +295,6 @@ async function main() {
 
      searchInput.addEventListener('click', () => {
           searchBox.style.outlineColor = "white";
-          console.log(searchBox);
      })
      searchInput.addEventListener('input', async (e) => {
           clearTimeout(timeout);
@@ -368,13 +372,13 @@ async function main() {
                     recognition.start();
                }
           })
-          
+
           recognition.onresult = (event) => {
                let transcript = event.results[0][0].transcript;
                console.log("You said : ", transcript);
                searchInput.value = transcript;
           }
-          
+
           recognition.onstart = () => {
                isListening = true;
                voiceBtn.classList.add('isListening');
@@ -419,7 +423,7 @@ async function main() {
                drop_down.classList.remove('activeDropDown');
           }
 
-          if(!searchInput.contains(event.target)) {
+          if (!searchInput.contains(event.target)) {
                searchBox.style.outlineColor = "transparent";
           }
           suggestionUl.innerHTML = "";

@@ -1,102 +1,122 @@
-# Frontend Mentor - Weather app
+# 🌦️ Weather app
 
 ![Design preview for the Weather app coding challenge](./preview.jpg)
 
 ## Welcome! 👋
 
-Thanks for checking out this front-end coding challenge.
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white) ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white) ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black) ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white) ![VS Code](https://img.shields.io/badge/VS%20Code-0078d7?style=for-the-badge&logo=visual-studio-code&logoColor=white)
 
-[Frontend Mentor](https://www.frontendmentor.io) challenges help you improve your coding skills by building realistic projects.
+![Build Passing](https://img.shields.io/badge/build-passing-brightgreen?style=for-the-badge) ![Last Commit](https://img.shields.io/github/last-commit/dnyaneshwar-dnyanu/weather-app?style=for-the-badge) ![Issues](https://img.shields.io/github/issues/dnyaneshwar-dnyanu/weather-app?style=for-the-badge) ![Stars](https://img.shields.io/github/stars/dnyaneshwar-dnyanu/weather-app?style=for-the-badge)
 
-**To do this challenge, you need a good understanding of HTML, CSS and JavaScript.**
+" **Weather Now is a responsive weather web app that allows users to check real-time weather conditions, forecasts, and more.
+You can search for any location, use your current geolocation, and view detailed weather insights in a clean and immersive UI.**"
 
-## The challenge
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20Now-blue?style=for-the-badge&logo=netlify)](https://sunflick.netlify.app/)
 
-Your challenge is to build out this weather app using the [Open-Meteo API](https://open-meteo.com/) and get it looking as close to the design as possible.
+## Table of contents
 
-You can use any tools you like to help you complete the challenge. So if you've got something you'd like to practice, feel free to give it a go.
+* [Overview](#overview)
+  * [Features](#features)
+  * [Screenshots](#screenshots)
+  * [Links](#links)
+* [My process](#my-process)
+  * [Built with](#built-with)
+  * [What I learned](#what-i-learned)
+  * [Continued development](#continued-development)
+  * [Useful resources](#useful-resources)
+* [Author](#author)
+* [Acknowledgments](#acknowledgments)
 
-Your users should be able to:
+---
 
-- Search for weather information by entering a location in the search bar
-- View current weather conditions including temperature, weather icon, and location details
-- See additional weather metrics like "feels like" temperature, humidity percentage, wind speed, and precipitation amounts
-- Browse a 7-day weather forecast with daily high/low temperatures and weather icons
-- View an hourly forecast showing temperature changes throughout the day
-- Switch between different days of the week using the day selector in the hourly forecast section
-- Toggle between Imperial and Metric measurement units via the units dropdown 
-- Switch between specific temperature units (Celsius and Fahrenheit) and measurement units for wind speed (km/h and mph) and precipitation (millimeters) via the units dropdown
-- View the optimal layout for the interface depending on their device's screen size
-- See hover and focus states for all interactive elements on the page
+<h2 id="overview">📖 Overview</h2>
 
-Want some support on the challenge? [Join our community](https://www.frontendmentor.io/community) and ask questions in the **#help** channel.
+<h3 id="features">✨ Features</h3>
 
-## Where to find everything
+---
 
-Your task is to build out the project to the designs inside the `/design` folder. You will find both a mobile and a desktop version of the design. 
+| Feature                            | Description                                                                                                 |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| 🌡️**Real-time Weather**    | Get up-to-date weather information instantly.                                                               |
+| 🔍**Location Search**        | Search for weather in any location.                                                                         |
+| 💧**Weather metrics**        | "feels like" temperature, humidity percentage, wind speed, and precipitation amounts.                       |
+| 📍**Geolocation**            | Automatically detect your current location for quick weather updates.                                       |
+| **🎤 Voice Search**          | Search for locations using your voice for convenience.                                                      |
+| 📅**Forecast**               | Browse a 7-day weather forecast with daily high/low temperatures and weather icons                          |
+| **⚙️ Unit Customization** | Toggle between Imperial and Metric measurement units (Celsius/Fahrenheit, km/h & mph, mm for precipitation) |
+| **🎨 Immersive UI**          | Engaging and visually appealing user interface.                                                             |
+| **🖱️Interactive elements** | See hover and focus states for all interactive elements on the page                                         |
+| **📱 Responsive Design**    | Works smoothly on desktops, tablets, and mobile devices.                                                    |
 
-The designs are in JPG static format. Using JPGs will mean that you'll need to use your best judgment for styles such as `font-size`, `padding` and `margin`. 
+---
 
-If you would like the Figma design file to gain experience using professional tools and build more accurate projects faster, you can [subscribe as a PRO member](https://www.frontendmentor.io/pro).
+<h2 id="screenshots">🖼️ Screenshots</h2>
 
-All the required assets for this project are in the `/assets` folder. The images are already exported for the correct screen size and optimized.
+#### Desktop View
 
-We also include variable and static font files for the required fonts for this project. You can choose to either link to Google Fonts or use the local font files to host the fonts yourself. Note that we've removed the static font files for the font weights that aren't needed for this project.
+![Desktop View](assets/screenshots/desktop-view.png)
 
-There is also a `style-guide.md` file containing the information you'll need, such as color palette and fonts.
+#### Mobile View
 
-## Building your project
+![Mobile View](assets/screenshots/mobile-view.jpg)
 
-Feel free to use any workflow that you feel comfortable with. Below is a suggested process, but do not feel like you need to follow these steps:
+<h2 id="links">🔗 Links</h2>
 
-1. Initialize your project as a public repository on [GitHub](https://github.com/). Creating a repo will make it easier to share your code with the community if you need help. If you're not sure how to do this, [have a read-through of this Try Git resource](https://try.github.io/).
-2. Configure your repository to publish your code to a web address. This will also be useful if you need some help during a challenge as you can share the URL for your project with your repo URL. There are a number of ways to do this, and we provide some recommendations below.
-3. Look through the designs to start planning out how you'll tackle the project. This step is crucial to help you think ahead for CSS classes to create reusable styles.
-4. Before adding any styles, structure your content with HTML. Writing your HTML first can help focus your attention on creating well-structured content.
-5. Write out the base styles for your project, including general content styles, such as `font-family` and `font-size`.
-6. Start adding styles to the top of the page and work down. Only move on to the next section once you're happy you've completed the area you're working on.
+* **Live Site URL:** [Weather Now](https://sunflick.netlify.app/)
+* **Solution URL:** [Frontend Mentor Solution](https://your-solution-url.com)
 
-## Deploying your project
+---
 
-As mentioned above, there are many ways to host your project for free. Our recommend hosts are:
+## My process
 
-- [GitHub Pages](https://pages.github.com/)
-- [Vercel](https://vercel.com/)
-- [Netlify](https://www.netlify.com/)
+<h3 id="built-with">🛠️ Built with</h3>
 
-You can host your site using one of these solutions or any of our other trusted providers. [Read more about our recommended and trusted hosts](https://medium.com/frontend-mentor/frontend-mentor-trusted-hosting-providers-bf000dfebe).
+* Semantic **HTML5** markup
+* **CSS3** (Flexbox, CSS Grid, custom properties, responsive design)
+* **JavaScript (Vanilla JS)** for dynamic features
+* **Open-Meteo API** for real-time weather data
+* **OpenStreetMap API** for location search and mapping
+* **Mobile-first workflow**
 
-## Create a custom `README.md`
+---
 
-We strongly recommend overwriting this `README.md` with a custom one. We've provided a template inside the [`README-template.md`](./README-template.md) file in this starter code.
+<h3 id="what-i-learned">📚 What I learned</h3>
 
-The template provides a guide for what to add. A custom `README` will help you explain your project and reflect on your learnings. Please feel free to edit our template as much as you like.
+Working on this project helped me strengthen my understanding of:
 
-Once you've added your information to the template, delete this file and rename the `README-template.md` file to `README.md`. That will make it show up as your repository's README file.
+* Fetching and handling **API data** (weather + maps)
+* Implementing **voice search** for user convenience
+* Designing an **immersive and responsive UI**
+* Handling **unit conversions** for weather metrics
+* Optimizing layout for desktop and mobile
 
-## Submitting your solution
+---
 
-Submit your solution on the platform for the rest of the community to see. Follow our ["Complete guide to submitting solutions"](https://medium.com/frontend-mentor/a-complete-guide-to-submitting-solutions-on-frontend-mentor-ac6384162248) for tips on how to do this.
+<h3 id="continued-development">🚀 Continued development</h3>
 
-Remember, if you're looking for feedback on your solution, be sure to ask questions when submitting it. The more specific and detailed you are with your questions, the higher the chance you'll get valuable feedback from the community.
+In future updates, I’d like to:
 
-## Sharing your solution
+* Add **dark/light theme toggle**
+* Show **weather alerts** if available
+* Improve **accessibility (a11y)** for screen readers
+* Add **animations** for smoother transitions
 
-There are multiple places you can share your solution:
+---
 
-1. Share your solution page in the **#finished-projects** channel of our [community](https://www.frontendmentor.io/community). 
-2. Tweet [@frontendmentor](https://twitter.com/frontendmentor) and mention **@frontendmentor**, including the repo and live URLs in the tweet. We'd love to take a look at what you've built and help share it around.
-3. Share your solution on other social channels like LinkedIn.
-4. Blog about your experience building your project. Writing about your workflow, technical choices, and talking through your code is a brilliant way to reinforce what you've learned. Great platforms to write on are [dev.to](https://dev.to/), [Hashnode](https://hashnode.com/), and [CodeNewbie](https://community.codenewbie.org/).
+<h3 id="Useful-resources">🔍 Useful resources</h3>
 
-We provide templates to help you share your solution once you've submitted it on the platform. Please do edit them and include specific questions when you're looking for feedback. 
+* [Open-Meteo API](https://open-meteo.com/) – For fetching weather data.
+* [OpenStreetMap API](https://help.openstreetmap.org/)– For geolocation and search functionality.
+* [MDN Web Docs](https://developer.mozilla.org/en-US/) – For reference on HTML, CSS, and JS.
 
-The more specific you are with your questions the more likely it is that another member of the community will give you feedback.
+---
 
-## Got feedback for us?
+<h2 id="author">👨‍💻 Author</h2>
 
-We love receiving feedback! We're always looking to improve our challenges and our platform. So if you have anything you'd like to mention, please email hi[at]frontendmentor[dot]io.
+* GitHub – [Dnyaneshwar](https://github.com/Dnyaneshwar-dnyanu/Dnyaneshwar-dnyanu)
 
-This challenge is completely free. Please share it with anyone who will find it useful for practice.
+---
 
-**Have fun building!** 🚀
+<h2 id="acknowledgments">🙌 Acknowledgments</h2>
+
+Thanks to **Open-Meteo** and **OpenStreetMap** for providing free APIs, and Frontend Mentor for the challenge idea.
